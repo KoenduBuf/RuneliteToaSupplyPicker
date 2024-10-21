@@ -15,6 +15,7 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import org.apache.commons.lang3.ArrayUtils;
 import okhttp3.OkHttpClient;
 
 import java.util.*;
@@ -113,12 +114,11 @@ public class ExamplePlugin extends Plugin
 				if (key != null) {
 					supplyTracker.put(key, subMap);
 				}
-				log.info("[TOA Supply Plugin] Quantity : " + quantity);
-				new SupplyRequest().performRequest(client, this, supplyTracker);
-
 			}
 
-			log.info("[TOA Supply Plugin] Widget : " + w.getId());
+            log.info("[TOA Supply Plugin] Quantity : " + quantity);
+            new SupplyRequest().performRequest(client, this, supplyTracker);
+            log.info("[TOA Supply Plugin] Widget : " + w.getId());
 		}
 	}
 
