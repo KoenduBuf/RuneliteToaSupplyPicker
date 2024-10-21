@@ -13,6 +13,7 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.*;
 
@@ -54,6 +55,7 @@ public class ExamplePlugin extends Plugin
 	{
 		log.info("[TOA Supply Plugin] Widget : " + e.toString());
 
+		// 777
 		Widget w = client.getWidget(777, 0);
 
 		if (w != null) {
@@ -78,7 +80,7 @@ public class ExamplePlugin extends Plugin
 
 			while (!widgetQueue.isEmpty()) {
 				Widget currentWidget = widgetQueue.pop();
-				Widget[] children = currentWidget.getChildren();
+				Widget[] children = ArrayUtils.addAll(currentWidget.getStaticChildren(), currentWidget.getDynamicChildren());
 
 				if (children == null) {
 					continue;
@@ -101,8 +103,8 @@ public class ExamplePlugin extends Plugin
 				if (key != null) {
 					supplyTracker.put(key, subMap);
 				}
-				log.info("[TOA Supply Plugin] Quantity : " + quantity);
 			}
+			log.info("[TOA Supply Plugin] Quantity : " + quantity);
 
 			log.info("[TOA Supply Plugin] Widget : " + w.getId());
 		}
