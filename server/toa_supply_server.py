@@ -14,6 +14,8 @@ def match_request():
     body = request.get_json()
 
     tmp_str = str(body)
+    print(tmp_str)
+
     with open_groups_lock:
         if tmp_str not in open_groups:
             open_groups[tmp_str] = 0

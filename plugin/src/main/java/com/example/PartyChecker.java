@@ -25,18 +25,17 @@ public class PartyChecker {
 
     public Map<String, Player> partyPlayerMap = new HashMap<>();
 
-    public void update(Client client) {
-        checkRegion(client);
-    }
 
-    private void checkRegion(Client client) {
+    public boolean checkRegion(Client client) {
         final int regionId = getCurrentRegionId(client);
         log.info("[TOA SUPPLY CHECKER] Entered region: " + regionId);
 
         if (regionId == TOA_LOBBY_INSIDE) {
             log.info("[TOA SUPPLY CHECKER] We there!");
             partyPlayerMap = tryLoadRaiders(client);
+            return true;
         }
+        return false;
     }
 
     public int getCurrentRegionId(Client client) {

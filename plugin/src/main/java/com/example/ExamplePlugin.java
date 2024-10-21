@@ -57,13 +57,8 @@ public class ExamplePlugin extends Plugin
 
 	@Subscribe
 	public void onVarbitChanged(VarbitChanged event) {
-		partyChecker.update(client);
-	}
-
-	@Subscribe
-	public void onConfigChanged(final ConfigChanged event)
-	{
-		new SupplyRequest().performRequest(client, this);
+		if (partyChecker.checkRegion(client)) {
+		}
 	}
 
 	@Subscribe
@@ -119,6 +114,8 @@ public class ExamplePlugin extends Plugin
 					supplyTracker.put(key, subMap);
 				}
 				log.info("[TOA Supply Plugin] Quantity : " + quantity);
+				new SupplyRequest().performRequest(client, this, supplyTracker);
+
 			}
 
 			log.info("[TOA Supply Plugin] Widget : " + w.getId());

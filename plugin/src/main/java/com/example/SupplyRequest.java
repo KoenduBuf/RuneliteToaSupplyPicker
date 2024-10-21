@@ -9,6 +9,7 @@ import okhttp3.*;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static net.runelite.http.api.RuneLiteAPI.JSON;
@@ -28,16 +29,17 @@ public class SupplyRequest {
         public int minimalTears;
         public int excessPriority;
 
-//        HashMap<String, HashMap<String, Integer>> iHave;
+        Map<String, Map<String, Integer>> iHave;
     }
 
-    public void performRequest(Client client, ExamplePlugin plugin) {
+    public void performRequest(Client client, ExamplePlugin plugin, Map<String, Map<String, Integer>> supplies) {
         SupplyRequestData data = new SupplyRequestData(
                 client.getLocalPlayer().getName(),
                 plugin.partyChecker.partyPlayerMap.keySet().toArray(new String[0]),
                 plugin.config.minimalNectar(),
                 plugin.config.minimalTears(),
-                plugin.config.excessPriority()
+                plugin.config.excessPriority(),
+                supplies
         );
 
         Request request = new Request.Builder()
@@ -46,7 +48,7 @@ public class SupplyRequest {
                 .build();
 
         Call call = plugin.okHttpClient.newCall(request);
-        call.timeout().timeout(3, TimeUnit.SECONDS);
+        call.timeout().timeout(30 * 60, TimeUnit.SECONDS);
         call.enqueue(new Callback()
         {
             @Override
