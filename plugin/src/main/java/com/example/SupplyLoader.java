@@ -54,7 +54,7 @@ public class SupplyLoader {
 
     private void addSupplies(Widget widget, Map<String, Integer> supplyMapPartial) {
         if (SUPPLY_MAP.containsKey(widget.getItemId())) {
-            String supplyName = SUPPLY_MAP.get(widget.getItemId())
+            String supplyName = SUPPLY_MAP.get(widget.getItemId());
             supplyMapPartial.put(supplyName, widget.getItemQuantity());
         }
     }
