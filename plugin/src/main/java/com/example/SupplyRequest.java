@@ -19,7 +19,6 @@ public class SupplyRequest {
     public static String TOA_SUPPLY_SERVER_URL = "http://127.0.0.1:5000";
 
 
-
     @AllArgsConstructor
     public static class SupplyRequestData {
         public String myName;
@@ -49,11 +48,9 @@ public class SupplyRequest {
 
         Call call = plugin.okHttpClient.newCall(request);
         call.timeout().timeout(30 * 60, TimeUnit.SECONDS);
-        call.enqueue(new Callback()
-        {
+        call.enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e)
-            {
+            public void onFailure(Call call, IOException e) {
                 log.debug("Failed to submit: ", e);
             }
 

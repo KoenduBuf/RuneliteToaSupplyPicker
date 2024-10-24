@@ -12,10 +12,8 @@ import net.runelite.api.events.WidgetLoaded;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
-import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
-import org.apache.commons.lang3.ArrayUtils;
 import okhttp3.OkHttpClient;
 
 import java.util.*;
@@ -40,10 +38,13 @@ public class ExamplePlugin extends Plugin
 
 	public PartyChecker partyChecker;
 
+	public SupplyLoader supplyLoader;
+
 	@Override
 	protected void startUp() throws Exception
 	{
 		partyChecker = new PartyChecker();
+		supplyLoader = new SupplyLoader();
 	}
 
 	@Subscribe
@@ -70,55 +71,10 @@ public class ExamplePlugin extends Plugin
 		Widget w = client.getWidget(777, 0);
 
 		if (w != null) {
-			String[] categories = new String[] {"Life", "Chaos", "Power"};
-			Map<Integer, String> supplyMap = new HashMap<>();
+			log.info("[TOA Supply Plugin] Widget : " + w.getId());
 
-			supplyMap.put(27315, "Nectar");
-			supplyMap.put(27327, "Tears");
-			supplyMap.put(27347, "Ambrosia");
-			supplyMap.put(27323, "Silk");
-			supplyMap.put(27335, "Scarab");
-			supplyMap.put(27343, "Salts");
-			supplyMap.put(27339, "Adrenaline");
-
-			Set<String> categorySet = new HashSet<>(Arrays.asList(categories));
-
-			Stack<Widget> widgetQueue = new Stack<>();
-			widgetQueue.add(w);
-
-			Map<String, Map<String, Integer>> supplyTracker = new HashMap<>();
-			int quantity = 0;
-
-			while (!widgetQueue.isEmpty()) {
-				Widget currentWidget = widgetQueue.pop();
-				Widget[] children = currentWidget.getChildren();
-
-				if (children == null) {
-					continue;
-				}
-
-				String key = null;
-				Map<String, Integer> subMap = new HashMap<>();
-				for (Widget child : children) {
-					widgetQueue.push(child);
-
-					if (categorySet.contains(child.getText())) {
-						key = child.getText();
-					}
-
-					if (supplyMap.containsKey(child.getItemId())) {
-						quantity += child.getItemQuantity();
-						subMap.put(supplyMap.get(child.getItemId()), child.getItemQuantity());
-					}
-				}
-				if (key != null) {
-					supplyTracker.put(key, subMap);
-				}
-			}
-
-            log.info("[TOA Supply Plugin] Quantity : " + quantity);
-            new SupplyRequest().performRequest(client, this, supplyTracker);
-            log.info("[TOA Supply Plugin] Widget : " + w.getId());
+			Map<String, Map<String, Integer>> trackedSupplies = supplyLoader.loadSupplies(w);
+			new SupplyRequest().performRequest(client, this, trackedSupplies);
 		}
 	}
 
